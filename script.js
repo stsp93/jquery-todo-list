@@ -2,30 +2,27 @@ const addBtn = $('#btn-add');
 const btnSave = $('#btn-save');
 const listEl = $('.list-group');
 
-let taskArray = (JSON.parse(localStorage.getItem('tasks')) ?? [])
+const taskArray = (JSON.parse(localStorage.getItem('tasks')) ?? []);
+let currentTaskId;
 
 // inital render
-
     listRender();
 
 // add button
-
 addBtn.on('click', function () {
     const task = $('#taskInput').val();
 
-    if (task === '') return;
+    if (task.trim() === '') return;
 
+    // alter taskArray
     taskArray.push(task);
-    listRender();
-    saveToLocalStorage(taskArray)
 
+    listRender();
+    // clear input
     $('#taskInput').val('');
 });
 
-// List button functionality
-
-let currentTaskId;
-
+// List buttons functionality
 listEl.on('click', function (ev) {
     const target = ev.target
     const taskId = target.parentElement.parentElement.dataset.id;
@@ -34,9 +31,8 @@ listEl.on('click', function (ev) {
     // delete button
     if (target.classList.contains('btn-danger')) {
 
-        // remove from localStorage and delete
+        // alter taskArray
         taskArray.splice(taskId, 1);
-        saveToLocalStorage(taskArray)
 
         listRender();
     };
@@ -55,16 +51,25 @@ btnSave.on('click', function () {
     const editedInput = $('#editTaskInput').val();
 
     taskArray[currentTaskId] = editedInput;
-    saveToLocalStorage(taskArray);
 
     listRender();
 
     $("#editModal").modal('hide');
+    // clear input
     $('#editTaskInput').val('');
 })
 
+// Clear btn
 
-function createMarkup(task, id) {
+$('#btn-clear').on('click', function() {
+    taskArray.length = 0;
+    listRender();
+})
+
+
+// Utility funcs
+
+function createTaskMarkup(task, id) {
     return `<li data-id=${id} class="list-group-item d-flex justify-content-between align-items-center">
     ${id + 1}. ${escapeHTML(task)}
     <div>
@@ -74,16 +79,16 @@ function createMarkup(task, id) {
   </li>`
 }
 
+// save to localStorage and render list
 function listRender() {
+    localStorage.setItem('tasks', JSON.stringify(taskArray));
+
     listEl.empty();
     taskArray.forEach((task, i) => {
-        listEl.append(createMarkup(task, i));
+        listEl.append(createTaskMarkup(task, i));
     })
 }
 
-function saveToLocalStorage(taskArray) {
-    localStorage.setItem('tasks', JSON.stringify(taskArray));
-}
 
 function escapeHTML(text) {
     const htmlEntities = {
