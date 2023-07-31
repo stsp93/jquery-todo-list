@@ -1,0 +1,15 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+  }
+  
+  .input-group {
+    margin-bottom: 10px;
+  }
+  
+  .list-group-item {
+    cursor: pointer;
+  }
+  
+  .list-group-item:hover {
+    background-color: #f1f1f1;
+  }

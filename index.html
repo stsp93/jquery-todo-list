@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Todo List</h1>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Enter task" id="taskInput">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button">Add Task</button>
+          </div>
+        </div>
+        <!-- TASK LIST -->
+        <ul class="list-group" id="taskList">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Sample Task 1
+                <div>
+                  <button type="button" class="btn btn-warning mr-2">Edit</button>
+                  <button type="button" class="btn btn-danger">Delete</button>
+                </div>
+              </li>
+        </ul>
+      </div>
+</body>
+</html>
