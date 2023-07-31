@@ -80,7 +80,7 @@ btnSave.on('click', function (ev) {
 
 function createMarkup(task, id) {
     return `<li data-id=${id} class="list-group-item d-flex justify-content-between align-items-center">
-    ${id + 1}. ${task}
+    ${id + 1}. ${escapeHTML(task)}
     <div>
       <button type="button" class="btn btn-warning mr-2">Edit</button>
       <button type="button" class="btn btn-danger">Delete</button>
@@ -94,3 +94,16 @@ function listRender() {
         listEl.append(createMarkup(task, i));
     })
 }
+
+function escapeHTML(text) {
+    const htmlEntities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#x27;",
+      "/": "&#x2F;"
+    };
+  
+    return text.replace(/[&<>"'\/]/g, (match) => htmlEntities[match]);
+  }
