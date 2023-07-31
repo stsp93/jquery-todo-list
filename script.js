@@ -13,11 +13,14 @@ addBtn.on('click', function () {
     const task = $('#taskInput').val();
 
     if (task.trim() === '') return;
+    
 
     // alter taskArray
     taskArray.push(task);
 
     listRender();
+    $('li').last().hide()
+    $('li').last().slideDown(500)
     // clear input
     $('#taskInput').val('');
 });
@@ -30,11 +33,15 @@ listEl.on('click', function (ev) {
 
     // delete button
     if (target.classList.contains('btn-danger')) {
+        $('ul').find(`[data-id="${taskId}"]`).slideUp(500, () => {
+
+            taskArray.splice(taskId, 1);
+    
+            listRender();
+        })
 
         // alter taskArray
-        taskArray.splice(taskId, 1);
 
-        listRender();
     };
 
     // edit button
@@ -46,7 +53,6 @@ listEl.on('click', function (ev) {
 })
 
 // Save btn
-
 btnSave.on('click', function () {
     const editedInput = $('#editTaskInput').val();
 
@@ -60,17 +66,17 @@ btnSave.on('click', function () {
 })
 
 // Clear btn
-
 $('#btn-clear').on('click', function() {
-    taskArray.length = 0;
-    listRender();
+    $('li').slideUp(400, () => {
+        taskArray.length = 0;
+        listRender();
+    })
 })
 
 
 // Utility funcs
-
 function createTaskMarkup(task, id) {
-    return `<li data-id=${id} class="list-group-item d-flex justify-content-between align-items-center">
+    return `<li data-id=${id} class="list-group-item d-flex justify-content-between align-items-center" style="background:${generateBackgroundColor(id)}">
     ${id + 1}. ${escapeHTML(task)}
     <div>
       <button type="button" class="btn btn-warning mr-2">Edit</button>
@@ -85,6 +91,7 @@ function listRender() {
 
     listEl.empty();
     taskArray.forEach((task, i) => {
+        console.log('loop');
         listEl.append(createTaskMarkup(task, i));
     })
 }
@@ -102,3 +109,12 @@ function escapeHTML(text) {
 
     return text.replace(/[&<>"'\/]/g, (match) => htmlEntities[match]);
 }
+
+function generateBackgroundColor(id) {
+    if(id % 2) {
+        return `#fff`;
+    } else {
+        return `#cff`
+    }
+    
+  }
