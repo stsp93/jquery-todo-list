@@ -2,14 +2,11 @@ const addBtn = $('#btn-add');
 const btnSave = $('#btn-save');
 const listEl = $('.list-group');
 
-let allTasks = localStorage.getItem('tasks');
+let taskArray = (JSON.parse(localStorage.getItem('tasks')) ?? [])
 
-// inital load
+// inital render
 
-if (allTasks) {
     listRender();
-}
-
 
 // add button
 
@@ -18,17 +15,11 @@ addBtn.on('click', function () {
 
     if (task === '') return;
 
-    listEl.append(createMarkup(task, JSON.parse(allTasks)?.length ?? 0));
+    taskArray.push(task);
+    listRender();
+    saveToLocalStorage(taskArray)
 
     $('#taskInput').val('');
-
-    if (!allTasks) {
-        localStorage.setItem('tasks', JSON.stringify([task]));
-    } else {
-        localStorage.setItem('tasks', JSON.stringify([...JSON.parse(allTasks), task]));
-    }
-
-    allTasks = localStorage.getItem('tasks');
 });
 
 // List button functionality
@@ -43,11 +34,9 @@ listEl.on('click', function (ev) {
     // delete button
     if (target.classList.contains('btn-danger')) {
 
-        // remove form localStorage and delete
-        const taskArray = JSON.parse(allTasks);
+        // remove from localStorage and delete
         taskArray.splice(taskId, 1);
-        localStorage.setItem('tasks', JSON.stringify(taskArray));
-        allTasks = JSON.stringify(taskArray);
+        saveToLocalStorage(taskArray)
 
         listRender();
     };
@@ -62,19 +51,16 @@ listEl.on('click', function (ev) {
 
 // Save btn
 
-btnSave.on('click', function (ev) {
+btnSave.on('click', function () {
     const editedInput = $('#editTaskInput').val();
-    const currentEl = listEl.find(`[data-id="${currentTaskId}"]`)
 
-  const taskArray = JSON.parse(localStorage.getItem('tasks'))
-  taskArray[currentTaskId] = editedInput;
-  localStorage.setItem('tasks', JSON.stringify(taskArray));
-  allTasks = JSON.stringify(taskArray);
+    taskArray[currentTaskId] = editedInput;
+    saveToLocalStorage(taskArray);
 
-  listRender();
+    listRender();
 
-  $("#editModal").modal('hide');
-  $('#editTaskInput').val('');
+    $("#editModal").modal('hide');
+    $('#editTaskInput').val('');
 })
 
 
@@ -90,20 +76,24 @@ function createMarkup(task, id) {
 
 function listRender() {
     listEl.empty();
-    JSON.parse(allTasks).forEach((task, i) => {
+    taskArray.forEach((task, i) => {
         listEl.append(createMarkup(task, i));
     })
 }
 
+function saveToLocalStorage(taskArray) {
+    localStorage.setItem('tasks', JSON.stringify(taskArray));
+}
+
 function escapeHTML(text) {
     const htmlEntities = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#x27;",
-      "/": "&#x2F;"
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#x27;",
+        "/": "&#x2F;"
     };
-  
+
     return text.replace(/[&<>"'\/]/g, (match) => htmlEntities[match]);
-  }
+}
