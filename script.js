@@ -20,7 +20,7 @@ addBtn.on('click', function () {
 
     listRender();
     $('li').last().hide()
-    $('li').last().slideDown(500)
+    $('li').last().slideDown(1000)
     // clear input
     $('#taskInput').val('');
 });
@@ -33,7 +33,7 @@ listEl.on('click', function (ev) {
 
     // delete button
     if (target.classList.contains('btn-danger')) {
-        $('ul').find(`[data-id="${taskId}"]`).slideUp(500, () => {
+        $('ul').find(`[data-id="${taskId}"]`).slideUp(1000, () => {
 
             taskArray.splice(taskId, 1);
     
@@ -58,7 +58,8 @@ btnSave.on('click', function () {
 
     taskArray[currentTaskId] = editedInput;
 
-    listRender();
+    $('ul').find(`[data-id="${currentTaskId}"]`).fadeOut(1000, () => {listRender()})
+
 
     $("#editModal").modal('hide');
     // clear input
@@ -114,7 +115,7 @@ function generateBackgroundColor(id) {
     if(id % 2) {
         return `#fff`;
     } else {
-        return `#cff`
+        return `#bcf`
     }
     
   }
