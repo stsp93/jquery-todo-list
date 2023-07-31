@@ -6,8 +6,8 @@ let allTasks = localStorage.getItem('tasks');
 // inital load
 
 if(allTasks) {
-    JSON.parse(allTasks).forEach(t => {
-        listEl.append(createMarkup(t));
+    JSON.parse(allTasks).forEach((task,i) => {
+        listEl.append(createMarkup(task, i));
     })
 }
 
@@ -19,7 +19,7 @@ addBtn.click(function () {
 
     console.log(task);
 
-    listEl.append(createMarkup(task));
+    listEl.append(createMarkup(task, JSON.parse(allTasks)?.length ?? 0));
 
     $('#taskInput').val('');
     
@@ -32,9 +32,12 @@ addBtn.click(function () {
     allTasks = localStorage.getItem('tasks');
 });
 
-function createMarkup(task) {
-    return `<li class="list-group-item d-flex justify-content-between align-items-center">
-    ${task}
+// delete button
+
+
+function createMarkup(task, id) {
+    return `<li data-id=${id} class="list-group-item d-flex justify-content-between align-items-center">
+    ${id}. ${task}
     <div>
       <button type="button" class="btn btn-warning mr-2">Edit</button>
       <button type="button" class="btn btn-danger">Delete</button>
