@@ -6,7 +6,7 @@ body {
     margin-bottom: 10px;
   }
   
-  
+
   .list-group-item:hover {
     filter: brightness(0.9);
     cursor: pointer;

@@ -7,11 +7,26 @@ let currentTaskId;
 let draggedIdx;
 
 listEl.sortable({
-    start: function(e, ui) {
+    start: function (e, ui) {
         draggedIdx = ui.item.index()
     },
-    update: function(e, ui) {
-        const toBeSwitchedIdx =  ui.item.index();
+    change: function (e, ui) {
+        let startIdx = draggedIdx;
+        let taskOverIdx = ui.placeholder.index();
+
+
+        $('strong').each((i, el) => {
+            if (i === startIdx) {
+                if (startIdx > taskOverIdx) {
+                    el.textContent = taskOverIdx + 1;
+                } else {
+                    el.textContent = taskOverIdx;
+                }
+            }
+        })
+    },
+    update: function (e, ui) {
+        const toBeSwitchedIdx = ui.item.index();
         const draggedTask = taskArray[draggedIdx]
 
         taskArray.splice(draggedIdx, 1);
@@ -95,7 +110,7 @@ $('#btn-clear').on('click', function () {
 // Utility funcs
 function createTaskMarkup(task, id) {
     return `<li data-id=${id} class="list-group-item d-flex justify-content-between align-items-center" style="background:${generateBackgroundColor(id)}">
-    ${id + 1}. ${escapeHTML(task)}
+    <p class="my-auto"><strong>${id + 1}</strong>. ${escapeHTML(task)}</p>
     <div>
       <button type="button" class="btn btn-warning mr-2">Edit</button>
       <button type="button" class="btn btn-danger">Delete</button>
