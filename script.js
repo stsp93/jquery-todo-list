@@ -1,26 +1,43 @@
 const addBtn = $('#btn-add');
 const btnSave = $('#btn-save');
-const listEl = $('.list-group');
+const listEl = $('#taskList');
 
-const taskArray = (JSON.parse(localStorage.getItem('tasks')) ?? []);
 let currentTaskId;
 
+let draggedIdx;
+
+listEl.sortable({
+    start: function(e, ui) {
+        draggedIdx = ui.item.index()
+    },
+    update: function(e, ui) {
+        const toBeSwitchedIdx =  ui.item.index();
+        const draggedTask = taskArray[draggedIdx]
+
+        taskArray.splice(draggedIdx, 1);
+        taskArray.splice(toBeSwitchedIdx, 0, draggedTask);
+        ($('li').filter(index => index == toBeSwitchedIdx)).fadeToggle(300, () => {
+            listRender()
+        })
+    }
+});
+
 // inital render
-    listRender();
+const taskArray = JSON.parse(localStorage.getItem('tasks')) ?? [];
+listRender();
 
 // add button
 addBtn.on('click', function () {
     const task = $('#taskInput').val();
 
     if (task.trim() === '') return;
-    
 
     // alter taskArray
     taskArray.push(task);
 
     listRender();
     $('li').last().hide()
-    $('li').last().slideDown(1000)
+    $('li').last().slideDown(500)
     // clear input
     $('#taskInput').val('');
 });
@@ -33,10 +50,10 @@ listEl.on('click', function (ev) {
 
     // delete button
     if (target.classList.contains('btn-danger')) {
-        $('ul').find(`[data-id="${taskId}"]`).slideUp(1000, () => {
+        listEl.find(`[data-id="${taskId}"]`).slideUp(500, () => {
 
             taskArray.splice(taskId, 1);
-    
+
             listRender();
         })
 
@@ -58,7 +75,7 @@ btnSave.on('click', function () {
 
     taskArray[currentTaskId] = editedInput;
 
-    $('ul').find(`[data-id="${currentTaskId}"]`).fadeOut(1000, () => {listRender()})
+    listEl.find(`[data-id="${currentTaskId}"]`).fadeOut(500, () => { listRender() })
 
 
     $("#editModal").modal('hide');
@@ -67,7 +84,7 @@ btnSave.on('click', function () {
 })
 
 // Clear btn
-$('#btn-clear').on('click', function() {
+$('#btn-clear').on('click', function () {
     $('li').slideUp(400, () => {
         taskArray.length = 0;
         listRender();
@@ -86,13 +103,13 @@ function createTaskMarkup(task, id) {
   </li>`
 }
 
+
 // save to localStorage and render list
 function listRender() {
     localStorage.setItem('tasks', JSON.stringify(taskArray));
 
     listEl.empty();
     taskArray.forEach((task, i) => {
-        console.log('loop');
         listEl.append(createTaskMarkup(task, i));
     })
 }
@@ -112,10 +129,10 @@ function escapeHTML(text) {
 }
 
 function generateBackgroundColor(id) {
-    if(id % 2) {
+    if (id % 2) {
         return `#fff`;
     } else {
         return `#bcf`
     }
-    
-  }
+
+}
