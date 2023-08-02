@@ -16,7 +16,7 @@ listEl.sortable({
         let taskOverIdx = ui.placeholder.index();
 
         const idx = ui.placeholder.prevAll().filter(':not(.ui-sortable-helper)').length;
-        // print relative change in index: negative is up, positive is down
+        // detect movement change with index negative is up, positive is down
         const movement = idx - $(this).data('idx'); 
         $(this).data('idx', idx);
  
@@ -41,9 +41,9 @@ listEl.sortable({
 
         taskArray.splice(draggedIdx, 1);
         taskArray.splice(toBeSwitchedIdx, 0, draggedTask);
-        ($('li').filter(index => index == toBeSwitchedIdx)).fadeToggle(300, () => {
+     
             listRender()
-        })
+      
     }
 });
 
