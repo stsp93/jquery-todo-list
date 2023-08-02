@@ -9,20 +9,30 @@ let draggedIdx;
 listEl.sortable({
     start: function (e, ui) {
         draggedIdx = ui.item.index()
+        $(this).data('idx', ui.item.index());
     },
     change: function (e, ui) {
         let startIdx = draggedIdx;
         let taskOverIdx = ui.placeholder.index();
 
+        const idx = ui.placeholder.prevAll().filter(':not(.ui-sortable-helper)').length;
+        // print relative change in index: negative is up, positive is down
+        const movement = idx - $(this).data('idx'); 
+        $(this).data('idx', idx);
+ 
 
         $('strong').each((i, el) => {
-            if (i === startIdx) {
-                if (startIdx > taskOverIdx) {
-                    el.textContent = taskOverIdx + 1;
+                // dragging up
+                if (movement === -1) {
+                    if (i === startIdx) el.textContent = --el.textContent;
+                    if(i=== taskOverIdx ) el.textContent = +el.textContent +1
+                    
+                    // dragging down
                 } else {
-                    el.textContent = taskOverIdx;
+                    if (i === startIdx)  el.textContent = ++el.textContent;
+                    if(i=== taskOverIdx - 1) el.textContent = +el.textContent -1
+                    
                 }
-            }
         })
     },
     update: function (e, ui) {
